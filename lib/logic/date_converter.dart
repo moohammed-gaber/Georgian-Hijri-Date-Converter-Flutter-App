@@ -1,9 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_date/util/data.dart';
 import 'package:hijri/umm_alqura_calendar.dart';
 
-typedef String ManyOperation(String text); //function signature
+typedef String DayValidator(
+    String text, BuildContext context); //function signature
 typedef void ConvertDate(BuildContext context);
+typedef String YearValidator(String text, BuildContext context);
 
 class DateConverterLogic with ChangeNotifier {
   String message = '';
@@ -12,45 +15,42 @@ class DateConverterLogic with ChangeNotifier {
   var yearTextFieldController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   ummAlquraCalendar result;
+  String dayValidator(String text, DayValidator oper, BuildContext context) {
+    return oper(text, context);
+  }
 
-  String dayValidatorGregorian(String text) {
+  String dayValidatorToHijri(String text, BuildContext context) {
     var intDay = int.tryParse(text);
     var intYear = int.tryParse(yearTextFieldController.text);
     var intMonth = int.tryParse(monthTextFieldController.text);
-    if (intMonth < 12) {
-      if (intDay > 31 || intDay == null) {
-        message = 'عدد ايام الشهر لا تتجاوز 31 يوم';
+    if (intDay == null) {
+      return '';
+    }
+    if (intDay > 31) {
+      showError(context, 'عدد ايام الشهر لا تتجاوز 31 يوم');
+
+      return '';
+    }
+    if (intMonth != null) {
+      if ((intMonth == 4 || intMonth == 6 || intMonth == 9 || intMonth == 11) &&
+          intDay > 30) {
+        showError(context,
+            ' شهر ${Data.months[intMonth]['gregorian']['ar']} عدد ايامه لا يتجاوز الـ 30 يوم');
 
         return '';
       }
-      if (intMonth == 2) {
-        if (intMonth > 29) {
-          message = 'شهر فبراير عدد ايامه لا يتجاوز الـ 29 يوم';
+    }
+    if (intMonth == 2) {
+      print('!!!');
+      if (intDay > 29) {
+        showError(context, 'شهر فبراير عدد ايامه لا يتجاوز الـ 29 يوم');
 
-          return '';
-        } else {
-          if (intYear != null) {
-            if (intYear % 4 == 0 && intDay != 29 ||
-                intYear % 4 != 0 && intDay != 28) {
-              message =
-                  'سنه 2000 شهر فبراير بها عدد ايامه لا يتجاوز الـ 28 يوم';
-
-              return '';
-            }
-          }
-        }
-      }
-      if (intMonth != null) {
-        if (intMonth == 4 ||
-            intMonth == 6 ||
-            intMonth == 9 ||
-            intMonth == 11 && intDay > 30) {
-          message = 'شهر مارس عدد ايامه لا يتجاوز الـ 30 يوم';
-
-          return '';
-        } else {
-          if (intDay > 31 && intMonth != 2) {
-            message = 'شهر مارس عدد ايامه لا يتجاوز الـ 30 يوم';
+        return '';
+      } else {
+        if (intYear != null) {
+          if (intYear % 4 != 0 && intDay > 28) {
+            showError(context,
+                'سنه $intYear شهر فبراير بها عدد ايامه لا يتجاوز الـ 28 يوم');
 
             return '';
           }
@@ -59,18 +59,26 @@ class DateConverterLogic with ChangeNotifier {
     }
   }
 
-  String monthValidator(String text) {
+  String dayValidatorToGregorian(
+    String text,
+  ) {}
+
+  String monthValidator(String text, BuildContext context) {
     var intMonth = int.tryParse(text);
     if (intMonth == null) {
       return '';
     }
     if (intMonth > 12) {
-      message = 'عدد شهور السنه لا يتجاوز 12 شهر';
+      showError(context, 'عدد شهور السنه لا يتجاوز 12 شهر');
       return '';
     }
   }
 
-  String yearValidator(String text) {
+  String yearValidator(String text, YearValidator oper, BuildContext context) {
+    oper(text, context);
+  }
+
+  String yearValidatorToHijri(String text, BuildContext context) {
     var intYear = int.tryParse(text);
 
     if (intYear == null) {
@@ -78,16 +86,26 @@ class DateConverterLogic with ChangeNotifier {
     }
 
     if (intYear < 1938) {
-      message = 'يمكن التحويل من سنه 1937 ميلادى الى ما فوق الى 16 سنه 2077';
+      showError(context, 'يمكن التحويل من سنه 1937 ميلادى الى 2077');
       return '';
     }
   }
 
-  String dayValidatorHijri(
-    String text,
-  ) {}
-  String dayValidator(String text, ManyOperation oper) {
-    return oper(text);
+  String yearValidatorToGregorian(String text, BuildContext context) {
+    var intYear = int.tryParse(text);
+    if (intYear == null) {
+      return '';
+    }
+
+    if (intYear < 1357) {
+      showError(context, 'يمكن التحويل من سنه 1357 هجري الى 1500');
+      return '';
+    }
+  }
+
+  void convertDate(BuildContext context, ConvertDate convertDate) {
+    convertDate(context);
+    notifyListeners();
   }
 
   void convertToGregorian(BuildContext context) {
@@ -95,16 +113,10 @@ class DateConverterLogic with ChangeNotifier {
     bool validation = formKey.currentState.validate();
     result = null;
     if (validation) {
-      this.result = (ummAlquraCalendar.fromDate(new DateTime(
+      this.result = (ummAlquraCalendar().hijriToGregorian(
           int.parse(yearTextFieldController.text),
           int.parse(monthTextFieldController.text),
-          int.parse(dayTextFieldController.text))));
-      notifyListeners();
-    } else {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 2),
-      ));
+          int.parse(dayTextFieldController.text)));
     }
   }
 
@@ -126,10 +138,6 @@ class DateConverterLogic with ChangeNotifier {
     }
   }
 
-  void convertDate(BuildContext context, ConvertDate convertDate) {
-    convertDate(context);
-  }
-
   void clearForm() {
     dayTextFieldController.clear();
 
@@ -137,8 +145,15 @@ class DateConverterLogic with ChangeNotifier {
     yearTextFieldController.clear();
   }
 
+  void showError(BuildContext context, String message) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: Text(message),
+      duration: Duration(seconds: 2),
+    ));
+  }
+
   Future<bool> onWillPop() async {
-    clearForm();
+//    clearForm();
     return true;
   }
 }

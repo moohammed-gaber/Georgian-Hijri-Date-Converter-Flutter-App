@@ -22,13 +22,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           Provider(
-            create: (BuildContext context) => screen,
+            create: (_) => screen,
           ),
           Provider(
-            create: (BuildContext context) => HomeLogic(),
+            create: (_) => HomeLogic(),
           ),
           ChangeNotifierProvider(
-            create: (BuildContext context) => DateConverterLogic(),
+            create: (_) => DateConverterLogic(),
           )
         ],
         child: MaterialApp(
@@ -43,6 +43,10 @@ class MyApp extends StatelessWidget {
                 child: new Builder(
                   builder: (BuildContext context) {
                     screen = Screen(MediaQuery.of(context).size);
+                    HomeLogic homeLogic = Provider.of(context);
+                    homeLogic.themeData = Theme.of(context);
+                    homeLogic.textTheme = homeLogic.themeData.textTheme;
+
                     return child;
                   },
                 ));

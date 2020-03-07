@@ -9,34 +9,27 @@ import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:hijri/umm_alqura_calendar.dart';
 import 'package:provider/provider.dart';
 
-class DateConverter extends StatefulWidget {
+class DateConverter extends StatelessWidget {
   static const route = '/dateConverter';
 
-  @override
-  _DateConverterState createState() => _DateConverterState();
-}
-
-class _DateConverterState extends State<DateConverter> {
   DateConverterModelArgs args;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    args = ModalRoute.of(context).settings.arguments;
-  }
 
   bool isKeyBoardVisible = false;
   @override
   Widget build(BuildContext context) {
+    args = ModalRoute.of(context).settings.arguments;
+
     DateConverterLogic dateConverterLogic =
         Provider.of<DateConverterLogic>(context);
+    //Invalid argument(s): Valid date should be between 1356 AH (14 March 1937 CE) to 1500 AH (16 November 2077 CE)
+
     Screen screen = Provider.of<Screen>(context);
 //todo put this in initState
     KeyboardVisibilityNotification().addNewListener(
         onHide: () {},
         onChange: (visible) {
           this.isKeyBoardVisible = visible;
-          setState(() {});
+          dateConverterLogic.notifyListeners();
         },
         onShow: () {
           print('!!');
@@ -44,12 +37,11 @@ class _DateConverterState extends State<DateConverter> {
 
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(onPressed: () {}),
         appBar: isKeyBoardVisible
             ? AppBar(
                 backgroundColor: Colors.purple,
                 title: Text(
-                  args.manyOperation == dateConverterLogic.dayValidatorGregorian
+                  args.isGregorianToHijri
                       ? 'التحويل من الميلادي إلى الهجري'
                       : 'التحويل من الهجري إلى الميلادي',
                   style: TextStyle(fontSize: 15),
@@ -87,8 +79,7 @@ class _DateConverterState extends State<DateConverter> {
                         ),
                         Center(
                             child: Text(
-                          args.manyOperation ==
-                                  dateConverterLogic.dayValidatorGregorian
+                          args.isGregorianToHijri
                               ? 'التحويل من ميلادي إلى هجري'
                               : 'التحويل من هجري إلى ميلادي',
                           textAlign: TextAlign.center,
@@ -115,122 +106,142 @@ class _DateConverterState extends State<DateConverter> {
             Spacer(
               flex: 1,
             ),
-            Form(
-              onWillPop: dateConverterLogic.onWillPop,
-              key: dateConverterLogic.formKey,
-              child: Flexible(
-                flex: isKeyBoardVisible ? 14 : 10,
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  margin: EdgeInsets.symmetric(horizontal: 15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Spacer(
-                            flex: 1,
-                          ),
-                          Flexible(
-                            flex: 2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text(
-                                  'التاريخ',
-                                  style: TextStyle(
-                                      color: Colors.purple,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w200),
-                                ),
-                                Text(
-                                  'الهجري',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w200),
-                                ),
-                              ],
+            Builder(
+              builder: (context) => Form(
+                onWillPop: dateConverterLogic.onWillPop,
+                key: dateConverterLogic.formKey,
+                child: Flexible(
+                  flex: isKeyBoardVisible ? 14 : 10,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Spacer(
+                              flex: 1,
                             ),
-                          ),
-                          Spacer(
-                            flex: 1,
-                          ),
-                          Flexible(
-                            flex: 3,
-                            child: Column(
-                              children: <Widget>[
-                                Text(
-                                  'السنة',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                MyTextField(
-                                    fieldValidator:
-                                        dateConverterLogic.yearValidator,
-                                    isYearField: true,
-                                    textEditingController: dateConverterLogic
-                                        .yearTextFieldController)
-                              ],
+                            Flexible(
+                              flex: 2,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(
+                                    'التاريخ',
+                                    style: TextStyle(
+                                        color: Colors.purple,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w200),
+                                  ),
+                                  Text(
+                                    'الهجري',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w200),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Spacer(
-                            flex: 1,
-                          ),
-                          Flexible(
-                            flex: 3,
-                            child: Column(
-                              children: <Widget>[
-                                Text(
-                                  'الشهر',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                MyTextField(
-                                    fieldValidator:
-                                        dateConverterLogic.monthValidator,
-                                    isYearField: false,
-                                    textEditingController: dateConverterLogic
-                                        .monthTextFieldController)
-                              ],
+                            Spacer(
+                              flex: 1,
                             ),
-                          ),
-                          Spacer(
-                            flex: 1,
-                          ),
-                          Flexible(
-                            flex: 3,
-                            child: Column(
-                              children: <Widget>[
-                                Text(
-                                  'اليوم',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                                MyTextField(
-                                    fieldValidator: (String text) {
-                                      return dateConverterLogic.dayValidator(
-                                          text, args.manyOperation);
-                                    },
-                                    isYearField: false,
-                                    textEditingController: dateConverterLogic
-                                        .dayTextFieldController)
-                              ],
+                            Flexible(
+                              flex: 3,
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'السنة',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  MyTextField(
+                                      fieldValidator: (String text) {
+                                        return this.args.isGregorianToHijri
+                                            ? dateConverterLogic.yearValidator(
+                                                text,
+                                                dateConverterLogic
+                                                    .yearValidatorToHijri,
+                                                context,
+                                              )
+                                            : dateConverterLogic.yearValidator(
+                                                text,
+                                                dateConverterLogic
+                                                    .yearValidatorToGregorian,
+                                                context);
+                                      },
+                                      isYearField: true,
+                                      textEditingController: dateConverterLogic
+                                          .yearTextFieldController)
+                                ],
+                              ),
                             ),
-                          ),
-                          Spacer(
-                            flex: 1,
-                          ),
-                        ],
-                      ),
-                    ],
+                            Spacer(
+                              flex: 1,
+                            ),
+                            Flexible(
+                              flex: 3,
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'الشهر',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  MyTextField(
+                                      fieldValidator: (String text) =>
+                                          dateConverterLogic.monthValidator(
+                                              text, context),
+                                      isYearField: false,
+                                      textEditingController: dateConverterLogic
+                                          .monthTextFieldController)
+                                ],
+                              ),
+                            ),
+                            Spacer(
+                              flex: 1,
+                            ),
+                            Flexible(
+                              flex: 3,
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'اليوم',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  MyTextField(
+                                      fieldValidator: (String text) =>
+                                          dateConverterLogic.dayValidator(
+                                              text,
+                                              this.args.isGregorianToHijri
+                                                  ? dateConverterLogic
+                                                      .dayValidatorToHijri
+                                                  : dateConverterLogic
+                                                      .dayValidatorToGregorian,
+                                              context),
+                                      isYearField: false,
+                                      textEditingController: dateConverterLogic
+                                          .dayTextFieldController)
+                                ],
+                              ),
+                            ),
+                            Spacer(
+                              flex: 1,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -283,14 +294,12 @@ class _DateConverterState extends State<DateConverter> {
                       onPressed: () {
                         dateConverterLogic.convertDate(
                             ctx,
-                            args.manyOperation ==
-                                    dateConverterLogic.convertToGregorian
-                                ? dateConverterLogic.convertToGregorian
-                                : dateConverterLogic.convertToHijri);
+                            args.isGregorianToHijri
+                                ? dateConverterLogic.convertToHijri
+                                : dateConverterLogic.convertToGregorian);
                       },
                       child: Text(
-                        args.manyOperation ==
-                                dateConverterLogic.dayValidatorGregorian
+                        args.isGregorianToHijri
                             ? 'التحويل إلى هجري'
                             : 'التحويل إلى ميلادى',
                         textAlign: TextAlign.center,
