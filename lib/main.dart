@@ -1,101 +1,61 @@
+import 'dart:math';
+import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_date/hijry_to_mieladey.dart';
+import 'package:flutter_date/logic/date_converter.dart';
+import 'package:flutter_date/logic/home.dart';
+import 'package:flutter_date/screens/home.dart';
+import 'package:flutter_date/screens/date_converter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import 'util/screen.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Home(),
-    );
+    Screen screen;
+    return MultiProvider(
+        providers: [
+          Provider(
+            create: (BuildContext context) => screen,
+          ),
+          Provider(
+            create: (BuildContext context) => HomeLogic(),
+          ),
+          ChangeNotifierProvider(
+            create: (BuildContext context) => DateConverterLogic(),
+          )
+        ],
+        child: MaterialApp(
+          initialRoute: Home.route,
+          routes: {
+            Home.route: (_) => Home(),
+            DateConverter.route: (_) => DateConverter()
+          },
+          builder: (BuildContext context, Widget child) {
+            return new Directionality(
+                textDirection: TextDirection.rtl,
+                child: new Builder(
+                  builder: (BuildContext context) {
+                    screen = Screen(MediaQuery.of(context).size);
+                    return child;
+                  },
+                ));
+          },
+          theme: ThemeData(
+              colorScheme: ColorScheme.light(),
+              primaryColorBrightness: Brightness.dark,
+              fontFamily: GoogleFonts.cairo().fontFamily,
+              textTheme: TextTheme(
+                  display2: TextStyle(color: Colors.white),
+                  body1: TextStyle(fontSize: 18, color: Colors.white),
+                  body2: TextStyle(fontSize: 30, color: Color(0xffE2D5E5)))),
+          debugShowCheckedModeBanner: false,
+        ));
   }
 }
-
-
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("التاريخ الهجري والميلادي"),centerTitle: true,),
-      // backgroundColor: Colors.pinkAccent,
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: Card(
-                color: Colors.blueGrey,
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Text(
-                          "شهر جمادي الاخرة",
-                          style: TextStyle(color: Colors.white70, fontSize: 22),
-                        ),
-                        Text(
-                          "الاثنين",
-                          style: TextStyle(color: Colors.yellow, fontSize: 26),
-                        ),
-                      ],
-                    ),
-                    Text("30/6/1441",style: TextStyle(color: Colors.white, fontSize: 26),),
-                    Text("  الحوت 1398 ه ش 5",style: TextStyle(color: Colors.white70, fontSize: 20),),
-                    Divider(height: 5,
-                      color: Colors.black,),
-                    Text("monday,february 24/2/2020",style: TextStyle(color: Colors.white, fontSize: 24),textAlign: TextAlign.center,),
-                    Text("شهر فبراير - شباط",style: TextStyle(color: Colors.white, fontSize: 26),textAlign: TextAlign.center,),
-
-
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 30,right: 10,left: 10,bottom: 10),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Container(
-                  width: double.infinity,
-                  child: RaisedButton(
-
-                      child: Text("التحويل من هجري الي ميلادي"),
-                      onPressed: (){ Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => HigryToMiladey()),
-                      );}),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Container(
-                width: double.infinity,
-                child: RaisedButton(
-                    child: Text("التحويل من ميلادي الي هجري"),
-                    onPressed: (){}),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
