@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_date/logic/date_converter.dart';
 import 'package:flutter_date/logic/home.dart';
 import 'package:flutter_date/util/data.dart';
 import 'package:flutter_date/util/screen.dart';
@@ -16,6 +17,8 @@ class Home extends StatelessWidget {
     ThemeData themeData = Theme.of(context);
     TextTheme textTheme = themeData.textTheme;
     print('hello worlddddddddddddd');
+    DateConverterLogic dateConverterLogic =
+        Provider.of<DateConverterLogic>(context);
 
     return SafeArea(
       child: Scaffold(
@@ -115,8 +118,9 @@ class Home extends StatelessWidget {
                 ),
                 Center(
                   child: SelectConvert(
-                    text: 'اتحويل من هجري إلى ميلادي',
+                    convertDate: dateConverterLogic.hijriToGregorian,
                     isGregorianToHijri: false,
+                    text: 'اتحويل من هجري إلى ميلادي',
                   ),
                 ),
                 Spacer(
@@ -124,8 +128,9 @@ class Home extends StatelessWidget {
                 ),
                 Center(
                   child: SelectConvert(
-                    text: 'اتحويل من ميلادى إلى هجري',
                     isGregorianToHijri: true,
+                    convertDate: dateConverterLogic.gregorianToHijri,
+                    text: 'اتحويل من ميلادى إلى هجري',
                   ),
                 ),
                 Spacer(

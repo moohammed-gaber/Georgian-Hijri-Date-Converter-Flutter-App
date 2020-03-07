@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_date/logic/home.dart';
 import 'package:flutter_date/util/data.dart';
 import 'package:hijri/umm_alqura_calendar.dart';
 
@@ -13,11 +14,31 @@ class DateConverterLogic with ChangeNotifier {
   var dayTextFieldController = TextEditingController();
   var monthTextFieldController = TextEditingController();
   var yearTextFieldController = TextEditingController();
+  ConvertDate converterDate;
+  YearValidator yearValidator;
+  DayValidator dayValidator;
+
+  void convertType(BuildContext context, ConvertDate convertDate) {
+    convertDate(context);
+  }
+
+  void gregorianToHijri(BuildContext context) {
+    converterDate = convertToHijri;
+    yearValidator = yearValidatorToHijri;
+    dayValidator = dayValidatorToHijri;
+  }
+
+  void hijriToGregorian(BuildContext context) {
+    converterDate = convertToGregorian;
+    yearValidator = yearValidatorToGregorian;
+    dayValidator = dayValidatorToGregorian;
+  }
+
   final formKey = GlobalKey<FormState>();
   ummAlquraCalendar result;
-  String dayValidator(String text, DayValidator oper, BuildContext context) {
-    return oper(text, context);
-  }
+//  String dayValidator(String text, DayValidator oper, BuildContext context) {
+//    return oper(text, context);
+//  }
 
   String dayValidatorToHijri(String text, BuildContext context) {
     var intDay = int.tryParse(text);
@@ -59,9 +80,7 @@ class DateConverterLogic with ChangeNotifier {
     }
   }
 
-  String dayValidatorToGregorian(
-    String text,
-  ) {}
+  String dayValidatorToGregorian(String text, BuildContext context) {}
 
   String monthValidator(String text, BuildContext context) {
     var intMonth = int.tryParse(text);
@@ -74,9 +93,9 @@ class DateConverterLogic with ChangeNotifier {
     }
   }
 
-  String yearValidator(String text, YearValidator oper, BuildContext context) {
-    oper(text, context);
-  }
+//  String yearValidator(String text, YearValidator oper, BuildContext context) {
+//    oper(text, context);
+//  }
 
   String yearValidatorToHijri(String text, BuildContext context) {
     var intYear = int.tryParse(text);
@@ -125,16 +144,11 @@ class DateConverterLogic with ChangeNotifier {
     bool validation = formKey.currentState.validate();
     result = null;
     if (validation) {
-      this.result = (ummAlquraCalendar().hijriToGregorian(
+      this.result = (ummAlquraCalendar.fromDate(DateTime(
           int.parse(yearTextFieldController.text),
           int.parse(monthTextFieldController.text),
-          int.parse(dayTextFieldController.text)));
+          int.parse(dayTextFieldController.text))));
       notifyListeners();
-    } else {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(message),
-        duration: Duration(seconds: 2),
-      ));
     }
   }
 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_date/logic/date_converter.dart';
 import 'package:hijri/umm_alqura_calendar.dart';
+import 'package:provider/provider.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 class HomeLogic {
@@ -11,10 +13,13 @@ class HomeLogic {
   DateTime nowGregorianDate;
   Jalali jalali;
   ummAlquraCalendar ummAlquraDate;
-  HomeLogic() {
+  DateConverterLogic dateConverter;
+  BuildContext context;
+  HomeLogic(this.context) {
     nowGregorianDate = DateTime.now();
     ummAlquraDate = ummAlquraCalendar.now();
     jalali = Jalali.now();
+
     print('iam here');
   }
 }

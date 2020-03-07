@@ -164,18 +164,8 @@ class DateConverter extends StatelessWidget {
                                   ),
                                   MyTextField(
                                       fieldValidator: (String text) {
-                                        return this.args.isGregorianToHijri
-                                            ? dateConverterLogic.yearValidator(
-                                                text,
-                                                dateConverterLogic
-                                                    .yearValidatorToHijri,
-                                                context,
-                                              )
-                                            : dateConverterLogic.yearValidator(
-                                                text,
-                                                dateConverterLogic
-                                                    .yearValidatorToGregorian,
-                                                context);
+                                        return dateConverterLogic.yearValidator(
+                                            text, context);
                                       },
                                       isYearField: true,
                                       textEditingController: dateConverterLogic
@@ -222,13 +212,7 @@ class DateConverter extends StatelessWidget {
                                   MyTextField(
                                       fieldValidator: (String text) =>
                                           dateConverterLogic.dayValidator(
-                                              text,
-                                              this.args.isGregorianToHijri
-                                                  ? dateConverterLogic
-                                                      .dayValidatorToHijri
-                                                  : dateConverterLogic
-                                                      .dayValidatorToGregorian,
-                                              context),
+                                              text, context),
                                       isYearField: false,
                                       textEditingController: dateConverterLogic
                                           .dayTextFieldController)
@@ -292,11 +276,7 @@ class DateConverter extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       color: Colors.purple,
                       onPressed: () {
-                        dateConverterLogic.convertDate(
-                            ctx,
-                            args.isGregorianToHijri
-                                ? dateConverterLogic.convertToHijri
-                                : dateConverterLogic.convertToGregorian);
+                        dateConverterLogic.converterDate(context);
                       },
                       child: Text(
                         args.isGregorianToHijri
