@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_date/logic/date_converter.dart';
+import 'package:provider/provider.dart';
 
 class MyTextField extends StatelessWidget {
   bool isYearField;
@@ -12,13 +14,21 @@ class MyTextField extends StatelessWidget {
       @required this.fieldValidator});
   @override
   Widget build(BuildContext context) {
+    DateConverterLogic dateConverterLogic =
+        Provider.of<DateConverterLogic>(context);
     return TextFormField(
       textAlignVertical: TextAlignVertical.center,
       controller: textEditingController,
       inputFormatters: <TextInputFormatter>[
         WhitelistingTextInputFormatter.digitsOnly
       ],
-      validator: this.fieldValidator,
+      validator: (String text) {
+        if (text.isEmpty) {
+          return '';
+        } else {
+          return this.fieldValidator(text);
+        }
+      },
       textAlign: TextAlign.center,
       keyboardType: TextInputType.number,
       maxLength: isYearField ? 4 : 2,

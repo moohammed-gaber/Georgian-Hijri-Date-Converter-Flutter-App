@@ -11,13 +11,13 @@ import 'package:provider/provider.dart';
 class SelectConvert extends StatelessWidget {
   String text;
   bool isGregorianToHijri;
-  ConvertDate convertDate;
+  ConvertType convertType;
   SelectConvert(
       {@required this.text,
       @required this.isGregorianToHijri,
-      @required this.convertDate,
+      @required this.convertType,
       void convertToGregorian});
-  ConvertDate converterDate;
+  ConvertType converterDate;
   YearValidator yearValidator;
   DayValidator dayValidator;
 
@@ -42,10 +42,11 @@ class SelectConvert extends StatelessWidget {
           ),
         ),
         onPressed: () async {
-          dateConverterLogic.convertType(context, convertDate);
+          dateConverterLogic.convertDate(context, convertType);
 
-          await Navigator.of(context).pushNamed(DateConverter.route,
-              arguments: DateConverterModelArgs(this.isGregorianToHijri));
+          await Navigator.of(context).pushNamed(
+            DateConverter.route,
+          );
         },
       ),
     );

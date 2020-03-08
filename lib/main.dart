@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
             create: (_) => screen,
           ),
           Provider(
-            create: (ctx) => HomeLogic(context),
+            create: (ctx) => HomeLogic(),
           ),
           ChangeNotifierProvider(
             create: (_) => DateConverterLogic(),

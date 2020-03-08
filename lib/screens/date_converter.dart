@@ -1,47 +1,29 @@
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_date/logic/date_converter.dart';
-import 'package:flutter_date/models/date_converter_model_args.dart';
 import 'package:flutter_date/util/screen.dart';
 import 'package:flutter_date/widgets/text_field.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
-import 'package:hijri/umm_alqura_calendar.dart';
 import 'package:provider/provider.dart';
 
 class DateConverter extends StatelessWidget {
   static const route = '/dateConverter';
 
-  DateConverterModelArgs args;
-
-  bool isKeyBoardVisible = false;
   @override
   Widget build(BuildContext context) {
-    args = ModalRoute.of(context).settings.arguments;
-
     DateConverterLogic dateConverterLogic =
         Provider.of<DateConverterLogic>(context);
-    //Invalid argument(s): Valid date should be between 1356 AH (14 March 1937 CE) to 1500 AH (16 November 2077 CE)
 
     Screen screen = Provider.of<Screen>(context);
-//todo put this in initState
-    KeyboardVisibilityNotification().addNewListener(
-        onHide: () {},
-        onChange: (visible) {
-          this.isKeyBoardVisible = visible;
-          dateConverterLogic.notifyListeners();
-        },
-        onShow: () {
-          print('!!');
-        });
-
     return SafeArea(
       child: Scaffold(
-        appBar: isKeyBoardVisible
+        appBar: dateConverterLogic.isKeyBoardVisible
             ? AppBar(
                 backgroundColor: Colors.purple,
                 title: Text(
-                  args.isGregorianToHijri
+                  dateConverterLogic.convertType ==
+                          dateConverterLogic.convertToHijri
                       ? 'التحويل من الميلادي إلى الهجري'
                       : 'التحويل من الهجري إلى الميلادي',
                   style: TextStyle(fontSize: 15),
@@ -66,8 +48,8 @@ class DateConverter extends StatelessWidget {
                             decoration: new BoxDecoration(
                               shape: BoxShape.circle,
                               image: new DecorationImage(
-                                image: new NetworkImage(
-                                    'https://t4.ftcdn.net/jpg/03/16/63/11/240_F_316631106_ZxfDs61cK2XGToojOnPehKt7vEaAyqbO.jpg'),
+                                image: new AssetImage(
+                                    'assets/images/background.jpg'),
                                 fit: BoxFit.cover,
                               ),
                               border: new Border.all(
@@ -79,9 +61,10 @@ class DateConverter extends StatelessWidget {
                         ),
                         Center(
                             child: Text(
-                          args.isGregorianToHijri
-                              ? 'التحويل من ميلادي إلى هجري'
-                              : 'التحويل من هجري إلى ميلادي',
+                          dateConverterLogic.convertType ==
+                                  dateConverterLogic.convertToGregorian
+                              ? 'التحويل من هجري إلى ميلادي'
+                              : 'التحويل من ميلادي إلى هجري',
                           textAlign: TextAlign.center,
                           textDirection: TextDirection.rtl,
                           style: TextStyle(fontWeight: FontWeight.w700),
@@ -111,48 +94,64 @@ class DateConverter extends StatelessWidget {
                 onWillPop: dateConverterLogic.onWillPop,
                 key: dateConverterLogic.formKey,
                 child: Flexible(
-                  flex: isKeyBoardVisible ? 14 : 10,
+                  flex: dateConverterLogic.isKeyBoardVisible ? 14 : 12,
                   child: Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
-                    margin: EdgeInsets.symmetric(horizontal: 15),
+                    margin: EdgeInsets.symmetric(horizontal: 30),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
+                        Spacer(),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Spacer(
-                              flex: 1,
-                            ),
-                            Flexible(
+                            Spacer(),
+                            Expanded(
                               flex: 2,
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   Text(
-                                    'التاريخ',
-                                    style: TextStyle(
-                                        color: Colors.purple,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w200),
-                                  ),
-                                  Text(
-                                    'الهجري',
+                                    'اليوم',
                                     style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w200),
+                                        fontWeight: FontWeight.w700),
                                   ),
+                                  MyTextField(
+                                      fieldValidator: (String text) =>
+                                          dateConverterLogic.dayValidator(
+                                              text, context),
+                                      isYearField: false,
+                                      textEditingController: dateConverterLogic
+                                          .dayTextFieldController)
                                 ],
                               ),
                             ),
-                            Spacer(
-                              flex: 1,
+                            Spacer(),
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                children: <Widget>[
+                                  Text(
+                                    'الشهر',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  MyTextField(
+                                      fieldValidator: (String text) =>
+                                          dateConverterLogic.monthValidator(
+                                              text, context),
+                                      isYearField: false,
+                                      textEditingController: dateConverterLogic
+                                          .monthTextFieldController)
+                                ],
+                              ),
                             ),
-                            Flexible(
+                            Spacer(),
+                            Expanded(
                               flex: 3,
                               child: Column(
                                 children: <Widget>[
@@ -173,56 +172,36 @@ class DateConverter extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Spacer(
-                              flex: 1,
-                            ),
-                            Flexible(
-                              flex: 3,
-                              child: Column(
-                                children: <Widget>[
-                                  Text(
-                                    'الشهر',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                  MyTextField(
-                                      fieldValidator: (String text) =>
-                                          dateConverterLogic.monthValidator(
-                                              text, context),
-                                      isYearField: false,
-                                      textEditingController: dateConverterLogic
-                                          .monthTextFieldController)
-                                ],
-                              ),
-                            ),
-                            Spacer(
-                              flex: 1,
-                            ),
-                            Flexible(
-                              flex: 3,
-                              child: Column(
-                                children: <Widget>[
-                                  Text(
-                                    'اليوم',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w700),
-                                  ),
-                                  MyTextField(
-                                      fieldValidator: (String text) =>
-                                          dateConverterLogic.dayValidator(
-                                              text, context),
-                                      isYearField: false,
-                                      textEditingController: dateConverterLogic
-                                          .dayTextFieldController)
-                                ],
-                              ),
-                            ),
-                            Spacer(
-                              flex: 1,
-                            ),
+                            Spacer(),
                           ],
+                        ),
+                        Divider(),
+                        Spacer(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          textDirection: TextDirection.rtl,
+                          children: <Widget>[
+                            Text('نتيجة التحويل ',
+                                style: TextStyle(
+                                    color: Colors.green,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold)),
+                            Text(
+                                dateConverterLogic.result == null
+                                    ? ''
+                                    : dateConverterLogic.convertType ==
+                                            dateConverterLogic
+                                                .convertToGregorian
+                                        ? '${(dateConverterLogic.result as DateTime).day} / ${dateConverterLogic.result.month} / ${dateConverterLogic.result.year}'
+                                        : '${dateConverterLogic.result.hDay} / ${dateConverterLogic.result.hMonth} / ${dateConverterLogic.result.hYear}',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w700)),
+                          ],
+                        ),
+                        Spacer(
+                          flex: 1,
                         ),
                       ],
                     ),
@@ -231,40 +210,7 @@ class DateConverter extends StatelessWidget {
               ),
             ),
             Spacer(
-              flex: 1,
-            ),
-            Row(
-              textDirection: TextDirection.rtl,
-              children: <Widget>[
-                Spacer(
-                  flex: 1,
-                ),
-                Text('نتيجة التحويل',
-                    style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold)),
-                Spacer(
-                  flex: 1,
-                ),
-                Flexible(
-                  flex: 4,
-                  child: Text(
-                      dateConverterLogic.result == null
-                          ? ''
-                          : '${dateConverterLogic.result.hDay} / ${dateConverterLogic.result.hMonth} / ${dateConverterLogic.result.hYear}',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.w700)),
-                ),
-                Spacer(
-                  flex: 1,
-                )
-              ],
-            ),
-            Spacer(
-              flex: 1,
+              flex: 2,
             ),
             ButtonTheme(
               height: 50,
@@ -276,10 +222,11 @@ class DateConverter extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       color: Colors.purple,
                       onPressed: () {
-                        dateConverterLogic.converterDate(context);
+                        dateConverterLogic.convertType(context);
                       },
                       child: Text(
-                        args.isGregorianToHijri
+                        dateConverterLogic.convertType ==
+                                dateConverterLogic.convertToHijri
                             ? 'التحويل إلى هجري'
                             : 'التحويل إلى ميلادى',
                         textAlign: TextAlign.center,
@@ -292,7 +239,7 @@ class DateConverter extends StatelessWidget {
               ),
             ),
             Spacer(
-              flex: 5,
+              flex: 3,
             ),
           ],
         ),

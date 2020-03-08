@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_date/logic/date_converter.dart';
 import 'package:flutter_date/logic/home.dart';
+import 'package:flutter_date/logic/test.dart';
 import 'package:flutter_date/util/data.dart';
 import 'package:flutter_date/util/screen.dart';
 import 'package:flutter_date/widgets/button.dart';
+import 'package:hijri/umm_alqura_calendar.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatelessWidget {
@@ -13,12 +15,9 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     HomeLogic homeLogic = Provider.of<HomeLogic>(context);
     Screen screen = Provider.of<Screen>(context);
-    print(homeLogic.textTheme.display2.color);
-    ThemeData themeData = Theme.of(context);
-    TextTheme textTheme = themeData.textTheme;
-    print('hello worlddddddddddddd');
     DateConverterLogic dateConverterLogic =
         Provider.of<DateConverterLogic>(context);
+    print(ummAlquraCalendar.fromDate(DateTime(2000, 3, 23)));
 
     return SafeArea(
       child: Scaffold(
@@ -118,7 +117,7 @@ class Home extends StatelessWidget {
                 ),
                 Center(
                   child: SelectConvert(
-                    convertDate: dateConverterLogic.hijriToGregorian,
+                    convertType: dateConverterLogic.hijriToGregorian,
                     isGregorianToHijri: false,
                     text: 'اتحويل من هجري إلى ميلادي',
                   ),
@@ -129,7 +128,7 @@ class Home extends StatelessWidget {
                 Center(
                   child: SelectConvert(
                     isGregorianToHijri: true,
-                    convertDate: dateConverterLogic.gregorianToHijri,
+                    convertType: dateConverterLogic.gregorianToHijri,
                     text: 'اتحويل من ميلادى إلى هجري',
                   ),
                 ),
