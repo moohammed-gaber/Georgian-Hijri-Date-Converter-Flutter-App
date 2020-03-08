@@ -23,9 +23,9 @@ class SelectConvert extends StatelessWidget {
         Provider.of<DateConverterLogic>(context);
     return SizedBox(
       height: screen.height / 10,
-      width: screen.width / 1.5,
+      width: screen.width / 1.2,
       child: FlatButton(
-        color: Colors.amber,
+        color: Colors.purple,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
         padding: EdgeInsets.symmetric(horizontal: 10),
@@ -33,12 +33,12 @@ class SelectConvert extends StatelessWidget {
           child: Text(
             text,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black, fontSize: 18),
+            style: TextStyle(color: Colors.white, fontSize: 18),
           ),
         ),
         onPressed: () async {
+          dateConverterLogic.clear();
           dateConverterLogic.convertDate(context, this.convertType);
-
           await Navigator.of(context).pushNamed(
             DateConverter.route,
           );

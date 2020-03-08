@@ -20,6 +20,8 @@ class DateConverterLogic with ChangeNotifier {
   final formKey = GlobalKey<FormState>();
   dynamic result;
   bool isKeyBoardVisible = false;
+  final GlobalKey<FormState> yearValidation = GlobalKey();
+  final GlobalKey<FormState> dayValidation = GlobalKey();
 
   KeyboardVisibilityNotification keyboardVisibilityNotification =
       KeyboardVisibilityNotification();
@@ -97,16 +99,16 @@ class DateConverterLogic with ChangeNotifier {
       return '';
     }
 
-    if (intMonth != null && intYear != null) {
+    if (monthValidator(monthTextFieldController.text, context) != null &&
+        yearValidator(yearTextFieldController.text, context) != null) {
       var _check_date = new ummAlquraCalendar();
       _check_date.hYear = intYear;
       _check_date.hMonth = intMonth;
       _check_date.hDay = intDay;
-      if(!_check_date.isValid()){
-       showError(context, 'الايام غلط') ;
-       return '';
+      if (!_check_date.isValid()) {
+        showError(context, 'الشهر $intMonth لا يوجد به اليوم $intDay');
+        return '';
       }
-
     }
 
 /*
@@ -146,10 +148,7 @@ class DateConverterLogic with ChangeNotifier {
   }
 
   void convertDate(BuildContext context, ConvertType convertType) {
-
     convertType(context);
-
-
   }
 
   void convertToGregorian(BuildContext context) {
@@ -162,7 +161,6 @@ class DateConverterLogic with ChangeNotifier {
           int.parse(monthTextFieldController.text),
           int.parse(dayTextFieldController.text)));
       notifyListeners();
-
     }
   }
 
@@ -176,10 +174,8 @@ class DateConverterLogic with ChangeNotifier {
           int.parse(monthTextFieldController.text),
           int.parse(dayTextFieldController.text))));
       notifyListeners();
-
     }
   }
-
 
   void clear() {
     result = null;
@@ -191,7 +187,10 @@ class DateConverterLogic with ChangeNotifier {
 
   void showError(BuildContext context, String message) {
     Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text(message,style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
+      content: Text(
+        message,
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+      ),
       duration: Duration(seconds: 2),
     ));
   }

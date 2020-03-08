@@ -42,7 +42,10 @@ class MyApp extends StatelessWidget {
                 textDirection: TextDirection.rtl,
                 child: new Builder(
                   builder: (BuildContext context) {
-                    screen = Screen(MediaQuery.of(context).size);
+                    screen = Screen(MediaQuery.of(context).size,
+                        MediaQuery.textScaleFactorOf(context));
+                    print(screen.textScale);
+
                     HomeLogic homeLogic = Provider.of(context);
                     homeLogic.themeData = Theme.of(context);
                     homeLogic.textTheme = homeLogic.themeData.textTheme;
@@ -58,7 +61,7 @@ class MyApp extends StatelessWidget {
               textTheme: TextTheme(
                   display2: TextStyle(color: Colors.white),
                   body1: TextStyle(fontSize: 18, color: Colors.white),
-                  body2: TextStyle(fontSize: 30, color: Color(0xffE2D5E5)))),
+                  body2: TextStyle(fontSize: 30, color: Colors.white))),
           debugShowCheckedModeBanner: false,
         ));
   }

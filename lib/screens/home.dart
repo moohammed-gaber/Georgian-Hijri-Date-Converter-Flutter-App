@@ -17,27 +17,26 @@ class Home extends StatelessWidget {
     Screen screen = Provider.of<Screen>(context);
     DateConverterLogic dateConverterLogic =
         Provider.of<DateConverterLogic>(context);
-
-
-    print(ummAlquraCalendar.fromDate(new DateTime(2014, 7, 32)).toString()); //04/03/1440H
-
     return SafeArea(
       child: Scaffold(
         body: Stack(
           children: <Widget>[
             Container(
-              height: screen.height,
-              width: screen.width,
-              decoration: BoxDecoration(
+                height: screen.height,
+                width: screen.width,
+                decoration: BoxDecoration(
+/*
                   gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                    Color(0xff22033C),
-                    Color(0xffD16696),
-                    Color(0xffBD63A7)
+                    Colors.orange[900],
+                    Colors.orange[800],
+                    Colors.orange[400],
+                    Colors.orange[200]
                   ])),
-            ),
+*/
+                    color: Colors.white)),
             Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -52,7 +51,7 @@ class Home extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(20)),
-                        color: Colors.white12,
+                        color: Colors.orange[400],
                       ),
                       child: Column(
                         children: <Widget>[
@@ -72,7 +71,7 @@ class Home extends StatelessWidget {
                                 Data.weekDays[
                                     homeLogic.nowGregorianDate.weekday]['ar'],
                                 style: homeLogic.textTheme.body2
-                                    .copyWith(color: Colors.orange),
+                                    .copyWith(color: Colors.white),
                               ),
                             ],
                           ),

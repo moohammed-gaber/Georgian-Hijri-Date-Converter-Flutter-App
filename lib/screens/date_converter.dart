@@ -15,9 +15,7 @@ class DateConverter extends StatelessWidget {
   Widget build(BuildContext context) {
     DateConverterLogic dateConverterLogic =
         Provider.of<DateConverterLogic>(context);
-
     Screen screen = Provider.of<Screen>(context);
-
 
     return SafeArea(
       child: Scaffold(
@@ -37,10 +35,8 @@ class DateConverter extends StatelessWidget {
                     Size.fromHeight(200 / screen.height * screen.height),
                 child: Stack(
                   children: <Widget>[
-                    Image.asset(
-                      'assets/images/background.jpg',
-                      fit: BoxFit.cover,
-                      width: screen.width,
+                    Container(
+                      color: Colors.purple,
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -48,8 +44,8 @@ class DateConverter extends StatelessWidget {
                       children: <Widget>[
                         Center(
                           child: Container(
-                            width: 80,
-                            height: 80,
+                            width: (100 / screen.width) * screen.width,
+                            height: (100 / screen.height) * screen.height,
                             decoration: new BoxDecoration(
                               shape: BoxShape.circle,
                               image: new DecorationImage(
@@ -96,14 +92,14 @@ class DateConverter extends StatelessWidget {
             ),
             Builder(
               builder: (context) => Form(
-                onWillPop: dateConverterLogic.onWillPop,
                 key: dateConverterLogic.formKey,
                 child: Flexible(
                   flex: dateConverterLogic.isKeyBoardVisible ? 19 : 12,
                   child: Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
-                    margin: EdgeInsets.symmetric(horizontal: 30),
+                    margin: EdgeInsets.symmetric(
+                        horizontal: 80 / screen.width * 80),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -168,9 +164,8 @@ class DateConverter extends StatelessWidget {
                                   ),
                                   MyTextField(
                                       fieldValidator: (String text) =>
-                                         dateConverterLogic.yearValidator(
-                                            text, context),
-
+                                          dateConverterLogic.yearValidator(
+                                              text, context),
                                       isYearField: true,
                                       textEditingController: dateConverterLogic
                                           .yearTextFieldController)
@@ -182,32 +177,20 @@ class DateConverter extends StatelessWidget {
                         ),
                         Divider(),
                         Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          textDirection: TextDirection.rtl,
-                          children: <Widget>[
-                            Text('نتيجة التحويل ',
-                                style: TextStyle(
-                                    color: Colors.green,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold)),
-                            Text(
-                                dateConverterLogic.result == null
-                                    ? ''
-                                    : dateConverterLogic.convertType ==
-                                            dateConverterLogic
-                                                .convertToGregorian
-                                        ? '${dateConverterLogic.result.day} / ${dateConverterLogic.result.month} / ${dateConverterLogic.result.year}'
-                                        : '${dateConverterLogic.result.hDay} / ${dateConverterLogic.result.hMonth} / ${dateConverterLogic.result.hYear}',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w700)),
-                          ],
+                        Center(
+                          child: Text(
+                              dateConverterLogic.result == null
+                                  ? ''
+                                  : dateConverterLogic.convertType ==
+                                          dateConverterLogic.convertToGregorian
+                                      ? '${dateConverterLogic.result.day} / ${dateConverterLogic.result.month} / ${dateConverterLogic.result.year}'
+                                      : '${dateConverterLogic.result.hDay} / ${dateConverterLogic.result.hMonth} / ${dateConverterLogic.result.hYear}',
+                              style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.w700)),
                         ),
-                        Spacer(
-                          flex: 1,
-                        ),
+                        Spacer(),
                       ],
                     ),
                   ),
@@ -215,7 +198,7 @@ class DateConverter extends StatelessWidget {
               ),
             ),
             Spacer(
-              flex: 2,
+              flex: 1,
             ),
             ButtonTheme(
               height: 50,
@@ -237,7 +220,7 @@ class DateConverter extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 18,
+                            fontSize: 14,
                             fontWeight: FontWeight.w600),
                       )),
                 ),
