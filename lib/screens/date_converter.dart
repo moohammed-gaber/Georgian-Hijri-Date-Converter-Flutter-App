@@ -30,6 +30,8 @@ class DateConverter extends StatelessWidget {
                 ),
               )
             : PreferredSize(
+                preferredSize:
+                    Size.fromHeight(200 / screen.height * screen.height),
                 child: Stack(
                   children: <Widget>[
                     Image.asset(
@@ -81,7 +83,7 @@ class DateConverter extends StatelessWidget {
                     )
                   ],
                 ),
-                preferredSize: Size.fromHeight(200)),
+              ),
         backgroundColor: Color(0xffF2F2F6),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -94,7 +96,7 @@ class DateConverter extends StatelessWidget {
                 onWillPop: dateConverterLogic.onWillPop,
                 key: dateConverterLogic.formKey,
                 child: Flexible(
-                  flex: dateConverterLogic.isKeyBoardVisible ? 14 : 12,
+                  flex: dateConverterLogic.isKeyBoardVisible ? 19 : 12,
                   child: Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
