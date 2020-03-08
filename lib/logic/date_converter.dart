@@ -152,10 +152,15 @@ class DateConverterLogic with ChangeNotifier {
   }
 
   void convertToHijri(BuildContext context) {
-    this.result = (ummAlquraCalendar.fromDate(DateTime(
-        int.parse(yearTextFieldController.text),
-        int.parse(monthTextFieldController.text),
-        int.parse(dayTextFieldController.text))));
+    FocusScope.of(context).unfocus();
+    bool validation = formKey.currentState.validate();
+    result = null;
+    if (validation) {
+      this.result = (ummAlquraCalendar.fromDate(DateTime(
+          int.parse(yearTextFieldController.text),
+          int.parse(monthTextFieldController.text),
+          int.parse(dayTextFieldController.text))));
+    }
   }
 
   void readyToConvert(BuildContext context, dynamic result) {
