@@ -5,6 +5,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_date/logic/date_converter.dart';
 import 'package:flutter_date/util/screen.dart';
 import 'package:flutter_date/widgets/text_field.dart';
+import 'package:hijri/umm_alqura_calendar.dart';
 import 'package:provider/provider.dart';
 
 class DateConverter extends StatelessWidget {
@@ -16,6 +17,8 @@ class DateConverter extends StatelessWidget {
         Provider.of<DateConverterLogic>(context);
 
     Screen screen = Provider.of<Screen>(context);
+
+
     return SafeArea(
       child: Scaffold(
         appBar: dateConverterLogic.isKeyBoardVisible
@@ -164,10 +167,10 @@ class DateConverter extends StatelessWidget {
                                         fontWeight: FontWeight.w700),
                                   ),
                                   MyTextField(
-                                      fieldValidator: (String text) {
-                                        return dateConverterLogic.yearValidator(
-                                            text, context);
-                                      },
+                                      fieldValidator: (String text) =>
+                                         dateConverterLogic.yearValidator(
+                                            text, context),
+
                                       isYearField: true,
                                       textEditingController: dateConverterLogic
                                           .yearTextFieldController)
@@ -194,7 +197,7 @@ class DateConverter extends StatelessWidget {
                                     : dateConverterLogic.convertType ==
                                             dateConverterLogic
                                                 .convertToGregorian
-                                        ? '${(dateConverterLogic.result as DateTime).day} / ${dateConverterLogic.result.month} / ${dateConverterLogic.result.year}'
+                                        ? '${dateConverterLogic.result.day} / ${dateConverterLogic.result.month} / ${dateConverterLogic.result.year}'
                                         : '${dateConverterLogic.result.hDay} / ${dateConverterLogic.result.hMonth} / ${dateConverterLogic.result.hYear}',
                                 style: TextStyle(
                                     color: Colors.black,

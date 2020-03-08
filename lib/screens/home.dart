@@ -17,7 +17,9 @@ class Home extends StatelessWidget {
     Screen screen = Provider.of<Screen>(context);
     DateConverterLogic dateConverterLogic =
         Provider.of<DateConverterLogic>(context);
-    print(ummAlquraCalendar.fromDate(DateTime(2000, 3, 23)));
+
+
+    print(ummAlquraCalendar.fromDate(new DateTime(2014, 7, 32)).toString()); //04/03/1440H
 
     return SafeArea(
       child: Scaffold(
@@ -118,7 +120,6 @@ class Home extends StatelessWidget {
                 Center(
                   child: SelectConvert(
                     convertType: dateConverterLogic.hijriToGregorian,
-                    isGregorianToHijri: false,
                     text: 'اتحويل من هجري إلى ميلادي',
                   ),
                 ),
@@ -127,7 +128,6 @@ class Home extends StatelessWidget {
                 ),
                 Center(
                   child: SelectConvert(
-                    isGregorianToHijri: true,
                     convertType: dateConverterLogic.gregorianToHijri,
                     text: 'اتحويل من ميلادى إلى هجري',
                   ),

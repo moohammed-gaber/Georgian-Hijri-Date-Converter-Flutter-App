@@ -96,16 +96,29 @@ class DateConverterLogic with ChangeNotifier {
 
       return '';
     }
-//    if (intMonth != null && intMonth != null) {
-//      var lengthOfMonth = ummAlquraCalendar
-//          .fromDate(DateTime(intYear, intMonth, intDay))
-//          .lengthOfMonth;
-//      if (lengthOfMonth < intDay) {
-//        showError(context,
-//            ' شهر ${Data.months[intMonth]['ummAlqura']} عدد ايامه لا يتجاوز الـ $lengthOfMonth يوم');
-//        return '';
-//      }
-//    }
+
+    if (intMonth != null && intYear != null) {
+      var _check_date = new ummAlquraCalendar();
+      _check_date.hYear = intYear;
+      _check_date.hMonth = intMonth;
+      _check_date.hDay = intDay;
+      if(!_check_date.isValid()){
+       showError(context, 'الايام غلط') ;
+       return '';
+      }
+
+    }
+
+/*
+      var lengthOfMonth = ummAlquraCalendar
+          .fromDate(DateTime(intYear, intMonth, intDay))
+          .lengthOfMonth;
+      if (lengthOfMonth < intDay) {
+        showError(context,
+            ' شهر ${Data.months[intMonth]['ummAlqura']} عدد ايامه لا يتجاوز الـ $lengthOfMonth يوم');
+        return '';
+      }
+    }*/
   }
 
   String monthValidator(String text, BuildContext context) {
@@ -118,17 +131,14 @@ class DateConverterLogic with ChangeNotifier {
 
   String yearValidatorToHijri(String text, BuildContext context) {
     var intYear = int.tryParse(text);
-
     if (intYear > 2076 || intYear < 1936) {
       showError(context, ' يمكن التحويل من سنه 1936 الى 2076');
-
       return '';
     }
   }
 
   String yearValidatorToGregorian(String text, BuildContext context) {
     var intYear = int.tryParse(text);
-
     if (intYear > 1499 || intYear < 1357) {
       showError(context, 'يمكن التحويل من سنه 1357  الى 1499');
       return '';
@@ -136,7 +146,10 @@ class DateConverterLogic with ChangeNotifier {
   }
 
   void convertDate(BuildContext context, ConvertType convertType) {
+
     convertType(context);
+
+
   }
 
   void convertToGregorian(BuildContext context) {
@@ -147,7 +160,9 @@ class DateConverterLogic with ChangeNotifier {
       result = (ummAlquraCalendar().hijriToGregorian(
           int.parse(yearTextFieldController.text),
           int.parse(monthTextFieldController.text),
-          int.parse(dayTextFieldController.text)) as DateTime);
+          int.parse(dayTextFieldController.text)));
+      notifyListeners();
+
     }
   }
 
@@ -160,37 +175,29 @@ class DateConverterLogic with ChangeNotifier {
           int.parse(yearTextFieldController.text),
           int.parse(monthTextFieldController.text),
           int.parse(dayTextFieldController.text))));
-    }
-  }
-
-  void readyToConvert(BuildContext context, dynamic result) {
-    FocusScope.of(context).unfocus();
-    result = null;
-    bool validation = formKey.currentState.validate();
-
-    if (validation) {
-      result = '';
-
       notifyListeners();
+
     }
   }
 
-  void clearForm() {
-    dayTextFieldController.clear();
 
+  void clear() {
+    result = null;
+
+    dayTextFieldController.clear();
     monthTextFieldController.clear();
     yearTextFieldController.clear();
   }
 
   void showError(BuildContext context, String message) {
     Scaffold.of(context).showSnackBar(SnackBar(
-      content: Text(message),
+      content: Text(message,style: TextStyle(fontSize: 20,fontWeight: FontWeight.w700),),
       duration: Duration(seconds: 2),
     ));
   }
 
   Future<bool> onWillPop() async {
-//    clearForm();
+    clear();
     return true;
   }
 }
