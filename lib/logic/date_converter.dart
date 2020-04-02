@@ -1,3 +1,4 @@
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_date/logic/home.dart';
@@ -22,7 +23,7 @@ class DateConverterLogic with ChangeNotifier {
   bool isKeyBoardVisible = false;
   final GlobalKey<FormState> yearValidation = GlobalKey();
   final GlobalKey<FormState> dayValidation = GlobalKey();
-
+  InterstitialAd interstitialAd;
   KeyboardVisibilityNotification keyboardVisibilityNotification =
       KeyboardVisibilityNotification();
 
@@ -36,6 +37,8 @@ class DateConverterLogic with ChangeNotifier {
         onShow: () {
           print('!!');
         });
+    interstitialAd = createInterstitialAd();
+    interstitialAd.load() ;
   }
 
   void gregorianToHijri(BuildContext context) {
@@ -198,5 +201,19 @@ class DateConverterLogic with ChangeNotifier {
   Future<bool> onWillPop() async {
     clear();
     return true;
+  }
+
+  InterstitialAd createInterstitialAd() {
+    return InterstitialAd(
+      adUnitId: InterstitialAd.testAdUnitId,
+      listener: (MobileAdEvent event) {
+        if (event == MobileAdEvent.closed ||
+            event == MobileAdEvent.failedToLoad) {
+          interstitialAd?.dispose();
+          interstitialAd = createInterstitialAd();
+          interstitialAd.load();
+        }
+      },
+    );
   }
 }

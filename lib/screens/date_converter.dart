@@ -209,7 +209,12 @@ class DateConverter extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10))),
                       color: Colors.purple,
-                      onPressed: () {
+                      onPressed: () async {
+                        bool isLoaded =
+                            await dateConverterLogic.interstitialAd.isLoaded();
+                        if (isLoaded) {
+                         await dateConverterLogic.interstitialAd.show();
+                        }
                         dateConverterLogic.convertType(context);
                       },
                       child: Text(
