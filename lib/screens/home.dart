@@ -5,7 +5,6 @@ import 'package:flutter_date/logic/test.dart';
 import 'package:flutter_date/util/data.dart';
 import 'package:flutter_date/util/screen.dart';
 import 'package:flutter_date/widgets/button.dart';
-import 'package:hijri/umm_alqura_calendar.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 

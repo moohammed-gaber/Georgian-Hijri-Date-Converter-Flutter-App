@@ -5,7 +5,6 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_date/logic/date_converter.dart';
 import 'package:flutter_date/util/screen.dart';
 import 'package:flutter_date/widgets/text_field.dart';
-import 'package:hijri/umm_alqura_calendar.dart';
 import 'package:provider/provider.dart';
 
 class DateConverter extends StatelessWidget {

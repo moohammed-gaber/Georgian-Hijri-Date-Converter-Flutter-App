@@ -3,7 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_date/logic/home.dart';
 import 'package:flutter_date/util/data.dart';
-import 'package:hijri/umm_alqura_calendar.dart';
+import 'package:hijri/hijri_calendar.dart';
+import 'package:hijri/digits_converter.dart';
+import 'package:hijri/hijri_array.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 typedef String DayValidator(
@@ -104,7 +106,7 @@ class DateConverterLogic with ChangeNotifier {
 
     if (monthValidator(monthTextFieldController.text, context) != null &&
         yearValidator(yearTextFieldController.text, context) != null) {
-      var _check_date = new ummAlquraCalendar();
+      var _check_date = new HijriCalendar();
       _check_date.hYear = intYear;
       _check_date.hMonth = intMonth;
       _check_date.hDay = intDay;
@@ -159,7 +161,7 @@ class DateConverterLogic with ChangeNotifier {
     bool validation = formKey.currentState.validate();
     result = null;
     if (validation) {
-      result = (ummAlquraCalendar().hijriToGregorian(
+      result = (HijriCalendar().hijriToGregorian(
           int.parse(yearTextFieldController.text),
           int.parse(monthTextFieldController.text),
           int.parse(dayTextFieldController.text)));
@@ -172,7 +174,7 @@ class DateConverterLogic with ChangeNotifier {
     bool validation = formKey.currentState.validate();
     result = null;
     if (validation) {
-      this.result = (ummAlquraCalendar.fromDate(DateTime(
+      this.result = (HijriCalendar.fromDate(DateTime(
           int.parse(yearTextFieldController.text),
           int.parse(monthTextFieldController.text),
           int.parse(dayTextFieldController.text))));

@@ -1,7 +1,8 @@
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_date/logic/date_converter.dart';
-import 'package:hijri/umm_alqura_calendar.dart';
+import 'package:hijri/digits_converter.dart';
+import 'package:hijri/hijri_calendar.dart';
 import 'package:provider/provider.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
@@ -10,10 +11,10 @@ class HomeLogic {
   TextTheme textTheme;
   DateTime nowGregorianDate;
   Jalali jalali;
-  ummAlquraCalendar ummAlquraDate;
+  HijriCalendar ummAlquraDate;
   HomeLogic() {
     nowGregorianDate = DateTime.now();
-    ummAlquraDate = ummAlquraCalendar.now();
+    ummAlquraDate = HijriCalendar.now();
     jalali = Jalali.now();
     bannerAd = createBannerAd();
     bannerAd.load();
