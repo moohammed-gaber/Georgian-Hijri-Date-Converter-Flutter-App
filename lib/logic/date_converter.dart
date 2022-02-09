@@ -40,7 +40,7 @@ class DateConverterLogic with ChangeNotifier {
           print('!!');
         });
     interstitialAd = createInterstitialAd();
-    interstitialAd.load() ;
+    interstitialAd.load();
   }
 
   void gregorianToHijri(BuildContext context) {

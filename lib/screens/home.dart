@@ -8,7 +8,6 @@ import 'package:flutter_date/widgets/button.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 
-
 class Home extends StatefulWidget {
   static const route = '/';
 
@@ -17,10 +16,9 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   String replaceFarsiNumber(String input) {
     const english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    const farsi = ['۰' , '۱' , '۲' , '۳' , '٤' , '٥' , '٦' , '٧' , '۸' , '۹'];
+    const farsi = ['۰', '۱', '۲', '۳', '٤', '٥', '٦', '٧', '۸', '۹'];
 
     for (int i = 0; i < english.length; i++) {
       input = input.replaceAll(english[i], farsi[i]);
@@ -39,7 +37,11 @@ class _HomeState extends State<Home> {
         Provider.of<DateConverterLogic>(context);
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(title: Text("محول التاريخ"),centerTitle: true,backgroundColor: Colors.deepPurple,),
+        appBar: AppBar(
+          title: Text("محول التاريخ"),
+          centerTitle: true,
+          backgroundColor: Colors.deepPurple,
+        ),
         body: Stack(
           children: <Widget>[
             Container(
@@ -86,19 +88,24 @@ class _HomeState extends State<Home> {
                               Text(
                                 Data.months[homeLogic.ummAlquraDate.hMonth]
                                     ['ummAlqura'],
-                                style: homeLogic.textTheme.body2.copyWith(fontWeight: FontWeight.bold),
+                                style: homeLogic.textTheme.bodyText2
+                                    .copyWith(fontWeight: FontWeight.bold),
                               ),
                               Text(
                                 Data.weekDays[
                                     homeLogic.nowGregorianDate.weekday]['ar'],
-                                style: homeLogic.textTheme.body2
-                                    .copyWith(color: Colors.white,fontWeight: FontWeight.bold),
+                                style: homeLogic.textTheme.bodyText2.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),
                           Text(
-                              replaceFarsiNumber('${homeLogic.ummAlquraDate.hDay} / ${homeLogic.ummAlquraDate.hMonth} / ${homeLogic.ummAlquraDate.hYear}'),
-                              style: homeLogic.textTheme.display2.copyWith(fontWeight: FontWeight.bold),),
+                            replaceFarsiNumber(
+                                '${homeLogic.ummAlquraDate.hDay} / ${homeLogic.ummAlquraDate.hMonth} / ${homeLogic.ummAlquraDate.hYear}'),
+                            style: homeLogic.textTheme.displayMedium
+                                .copyWith(fontWeight: FontWeight.bold),
+                          ),
 //                          Text(
 //                            '${homeLogic.jalali.day} ${Data.months[homeLogic.jalali.month]['jalali']} ${homeLogic.jalali.year} ',
 //                            style: homeLogic.textTheme.body1
@@ -113,7 +120,8 @@ class _HomeState extends State<Home> {
                           ),
                           Text(
                             "${Data.weekDays[homeLogic.nowGregorianDate.weekday]['en']}, ${Data.months[homeLogic.nowGregorianDate.month]['gregorian']['en']} ${homeLogic.nowGregorianDate.day}/${homeLogic.nowGregorianDate.month}/${homeLogic.nowGregorianDate.year}",
-                            style: homeLogic.textTheme.body1.copyWith(fontWeight: FontWeight.bold),
+                            style: homeLogic.textTheme.bodyText1
+                                .copyWith(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
                           Flexible(
@@ -122,7 +130,8 @@ class _HomeState extends State<Home> {
                           ),
                           Text(
                             "شهر ${Data.months[homeLogic.nowGregorianDate.month]['gregorian']['ar']}",
-                            style: homeLogic.textTheme.body1.copyWith(fontWeight: FontWeight.bold),
+                            style: homeLogic.textTheme.bodyText1
+                                .copyWith(fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
                           Flexible(
@@ -134,7 +143,6 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
-
                 Spacer(
                   flex: 6,
                 ),
@@ -164,4 +172,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-

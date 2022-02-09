@@ -20,7 +20,7 @@ class MyTextField extends StatelessWidget {
       textAlignVertical: TextAlignVertical.center,
       controller: textEditingController,
       inputFormatters: <TextInputFormatter>[
-        WhitelistingTextInputFormatter.digitsOnly
+        // WhitelistingTextInputFormatter.digitsOnly
       ],
       validator: (String text) {
         if (text.isEmpty) {

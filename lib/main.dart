@@ -59,9 +59,9 @@ class MyApp extends StatelessWidget {
               primaryColorBrightness: Brightness.dark,
               fontFamily: GoogleFonts.cairo().fontFamily,
               textTheme: TextTheme(
-                  display2: TextStyle(color: Colors.white),
-                  body1: TextStyle(fontSize: 18, color: Colors.white),
-                  body2: TextStyle(fontSize: 30, color: Colors.white))),
+                  headline3: TextStyle(color: Colors.white),
+                  bodyText1: TextStyle(fontSize: 18, color: Colors.white),
+                  bodyText2: TextStyle(fontSize: 30, color: Colors.white))),
           debugShowCheckedModeBanner: false,
         ));
   }
