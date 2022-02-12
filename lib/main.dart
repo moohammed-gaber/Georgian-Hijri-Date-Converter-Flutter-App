@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_date/logic/date_converter.dart';
 import 'package:flutter_date/logic/home.dart';
-import 'package:flutter_date/screens/home.dart';
+import 'package:flutter_date/features/date/presentation/pages/home.dart';
 import 'package:flutter_date/screens/date_converter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';

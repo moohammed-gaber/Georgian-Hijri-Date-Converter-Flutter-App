@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_date/logic/date_converter.dart';
 import 'package:flutter_date/util/screen.dart';
-import 'package:flutter_date/widgets/text_field.dart';
+import 'package:flutter_date/features/date/presentation/widgets/text_field.dart';
 import 'package:provider/provider.dart';
 
 class DateConverter extends StatelessWidget {
@@ -212,7 +212,7 @@ class DateConverter extends StatelessWidget {
                         bool isLoaded =
                             await dateConverterLogic.interstitialAd.isLoaded();
                         if (isLoaded) {
-                         await dateConverterLogic.interstitialAd.show();
+                          await dateConverterLogic.interstitialAd.show();
                         }
                         dateConverterLogic.convertType(context);
                       },
